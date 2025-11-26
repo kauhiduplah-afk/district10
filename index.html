@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>DISTRICT10 Night Club</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    /* === LOGO IMAGE (RESPONSIVE) === */
+    .logo-img {
+      width: clamp(140px, 18vw, 220px); /* min 140px, max 220px, ikut lebar layar */
+      height: auto;
+      display: block;
+      object-fit: contain;
+
+      /* Glow + animasi gerak */
+      filter:
+        drop-shadow(0 0 12px rgba(255, 0, 0, 0.7))
+        drop-shadow(0 0 24px rgba(255, 180, 0, 0.65));
+
+      animation:
+        floatLogo 5s ease-in-out infinite,
+        neonPulse 1.8s ease-in-out infinite;
+    }
+
+    /* Efek mengambang */
+    @keyframes floatLogo {
+      0%   { transform: translateY(0px) scale(1); }
+      50%  { transform: translateY(-8px) scale(1.02); }
+      100% { transform: translateY(0px) scale(1); }
+    }
+
+    /* Efek neon berdenyut */
+    @keyframes neonPulse {
+      0%, 100% {
+        filter:
+          drop-shadow(0 0 10px rgba(255, 40, 0, 0.6))
+          drop-shadow(0 0 25px rgba(255, 200, 0, 0.6));
+      }
+      50% {
+        filter:
+          drop-shadow(0 0 20px rgba(255, 0, 0, 0.95))
+          drop-shadow(0 0 40px rgba(255, 220, 0, 0.9));
+      }
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #ff3bff;
+      --secondary: #00f5ff;
+      --dark-bg: #050012;
+      --glass-bg: rgba(10, 10, 30, 0.6);
+      --border-glass: rgba(255, 255, 255, 0.18);
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      min-height: 100vh;
+      color: #f7f7ff;
+      background: radial-gradient(circle at top, #350052 0, #050012 45%, #000000 100%);
+      overflow-x: hidden; /* biar bisa scroll vertikal di HP */
+    }
+
+    /* Animated gradient overlay */
+    .bg-gradient {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 20% 20%, rgba(255, 59, 255, 0.3), transparent 60%),
+                  radial-gradient(circle at 80% 80%, rgba(0, 245, 255, 0.25), transparent 60%),
+                  radial-gradient(circle at 10% 80%, rgba(255, 200, 0, 0.15), transparent 60%);
+      mix-blend-mode: screen;
+      pointer-events: none;
+      animation: floatGradient 16s ease-in-out infinite alternate;
+      z-index: -1;
+    }
+
+    @keyframes floatGradient {
+      0% {
+        transform: translate3d(0, 0, 0) scale(1);
+      }
+      50% {
+        transform: translate3d(-20px, 10px, 0) scale(1.05);
+      }
+      100% {
+        transform: translate3d(20px, -10px, 0) scale(1.02);
+      }
+    }
+
+    /* Fake lights / spotlights */
+    .light {
+      position: fixed;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(0, 245, 255, 0.55), transparent 70%);
+      filter: blur(2px);
+      opacity: 0.35;
+      mix-blend-mode: screen;
+      transform: translateZ(0);
+      pointer-events: none;
+    }
+    .light.light-left {
+      top: -40px;
+      left: -20px;
+    }
+    .light.light-right {
+      bottom: -40px;
+      right: -20px;
+      background: radial-gradient(circle, rgba(255, 59, 255, 0.6), transparent 70%);
+    }
+
+    .overlay-noise {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+      opacity: 0.15;
+      mix-blend-mode: soft-light;
+      z-index: -1;
+    }
+
+    main {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 16px 32px;
+    }
+
+    /* HEADER / LOGO */
+    .header {
+      width: 100%;
+      max-width: 1100px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      gap: 16px;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .brand-text h1 {
+      font-size: clamp(1rem, 1.2vw + 0.8rem, 1.4rem);
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    .brand-text span {
+      font-size: clamp(0.65rem, 0.7vw + 0.4rem, 0.8rem);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      opacity: 0.75;
+    }
+
+    .header-pill {
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02));
+      backdrop-filter: blur(20px);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #ff3b3b;
+      box-shadow: 0 0 10px rgba(255,59,59,0.9);
+      animation: pulse 1.3s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.4);
+        opacity: 0.5;
+      }
+    }
+
+    /* HERO CONTENT */
+    .hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 28px;
+      padding: 0 12px;
+      max-width: 850px;
+    }
+
+    .hero-title {
+      font-size: clamp(2rem, 4vw, 3.1rem);
+      line-height: 1.15;
+      text-transform: uppercase;
+      letter-spacing: 0.26em;
+    }
+
+    .hero-title span.highlight {
+      background: linear-gradient(120deg, #ff3bff, #00f5ff);
+      -webkit-background-clip: text;
+      color: transparent;
+      text-shadow:
+        0 0 24px rgba(255, 59, 255, 0.6),
+        0 0 18px rgba(0, 245, 255, 0.5);
+    }
+
+    .hero-sub {
+      font-size: clamp(0.85rem, 0.9vw + 0.5rem, 1rem);
+      max-width: 560px;
+      opacity: 0.85;
+    }
+
+    .tagline {
+      font-size: clamp(0.65rem, 0.8vw, 0.8rem);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
+
+    /* GLASS BUTTON WRAP */
+    .btn-grid {
+      display: grid;
+      grid-template-columns: 1fr;                 /* mobile: 1 kolom */
+      max-width: 480px;
+      width: 100%;
+      gap: 14px;
+      margin-top: 12px;
+    }
+
+    /* Tablet: 2 kolom */
+    @media (min-width: 640px) {
+      .btn-grid {
+        grid-template-columns: repeat(2, minmax(140px, 230px));
+        max-width: 520px;
+      }
+    }
+
+    /* Desktop lebar: 4 kolom */
+    @media (min-width: 1024px) {
+      .btn-grid {
+        grid-template-columns: repeat(4, minmax(150px, 1fr));
+        max-width: 900px;
+      }
+    }
+
+    .glass-btn {
+      position: relative;
+      padding: 14px 20px;
+      border-radius: 18px;
+      border: 1px solid var(--border-glass);
+      background: radial-gradient(circle at 0 0, rgba(255, 255, 255, 0.18), transparent 55%),
+                  linear-gradient(135deg, rgba(10,10,30,0.9), rgba(10,10,30,0.5));
+      color: #ffffff;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-weight: 500;
+      cursor: pointer;
+      overflow: hidden;
+      backdrop-filter: blur(24px);
+      display: flex;              /* supaya icon + text rapi */
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow:
+        0 18px 40px rgba(0, 0, 0, 0.7),
+        0 0 24px rgba(0, 245, 255, 0.18);
+      transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        border 0.18s ease,
+        background 0.18s ease;
+      text-decoration: none;      /* hilang underline di <a> */
+      color: #fff;
+    }
+
+    .glass-btn span.icon {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .glass-btn::before {
+      content: "";
+      position: absolute;
+      inset: -50%;
+      background: conic-gradient(from 120deg, rgba(255,59,255,0.5), rgba(0,245,255,0.6), transparent, transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      transform: translate3d(-10px, -10px, 0);
+      mix-blend-mode: screen;
+    }
+
+    .glass-btn:hover {
+      transform: translateY(-4px) scale(1.01);
+      border-color: rgba(255, 255, 255, 0.4);
+      box-shadow:
+        0 22px 55px rgba(0, 0, 0, 0.9),
+        0 0 40px rgba(255, 59, 255, 0.45);
+      background: radial-gradient(circle at 0 0, rgba(255, 255, 255, 0.28), transparent 55%),
+                  linear-gradient(135deg, rgba(20,20,50,0.98), rgba(13,13,40,0.7));
+    }
+
+    .glass-btn:hover::before {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+
+    .glass-btn:active {
+      transform: translateY(-1px) scale(0.99);
+      box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.8),
+        0 0 25px rgba(0,245,255,0.35);
+    }
+
+    /* small text under buttons */
+    .hint {
+      margin-top: 10px;
+      font-size: 0.7rem;
+      opacity: 0.6;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    /* FOOTER */
+    footer {
+      width: 100%;
+      max-width: 1100px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.7rem;
+      opacity: 0.7;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    footer span {
+      white-space: nowrap;
+    }
+
+    .socials {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .pill-link {
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.28);
+      background: rgba(5,2,20,0.65);
+      text-decoration: none;
+      color: inherit;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+    }
+
+    .pill-link:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.7);
+      transform: translateY(-1px);
+    }
+
+    /* Toast (untuk demo klik tombol) */
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%) translateY(150%);
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(0,0,0,0.85);
+      border: 1px solid rgba(255,255,255,0.24);
+      backdrop-filter: blur(18px);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      transition: transform 0.4s ease, opacity 0.4s ease;
+      z-index: 20;
+    }
+
+    .toast.visible {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .toast-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--secondary);
+      box-shadow: 0 0 12px rgba(0,245,255,0.9);
+    }
+
+    /* === RESPONSIVE HEADER UNTUK MOBILE === */
+    @media (max-width: 640px) {
+      .header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .logo-wrap {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .header-pill {
+        align-self: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background Elements -->
+  <div class="bg-gradient"></div>
+  <div class="light light-left"></div>
+  <div class="light light-right"></div>
+  <div class="overlay-noise"></div>
+
+  <!-- Toast message -->
+  <div class="toast" id="toast">
+    <span class="toast-dot"></span>
+    <span id="toast-text">Coming soon</span>
+  </div>
+
+  <main>
+    <!-- HEADER -->
+    <header class="header">
+      <div class="logo-wrap">
+        <!-- Ganti src ini ke file PNG lokal kamu jika mau -->
+        <img src="https://i.ibb.co/gMRYPn5p/image-removebg-preview.png" alt="District10 Logo" class="logo-img" />
+        <div class="brand-text">
+          <h1>DISTRICT10</h1>
+          <span>Night Club • CERITA ROLEPLAYKU INDONESIA</span>
+        </div>
+      </div>
+      <div class="header-pill">
+        <span class="live-dot"></span>
+        <span id="session-label">Open Night</span>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="tagline">TEMPAT HIBURAN DI KOTA CERITA ROLEPLAYKU INDONESIA</div>
+
+      <h2 class="hero-title">
+        COME AND JOIN <span class="highlight">District10</span>
+      </h2>
+
+      <p class="hero-sub">
+        Di tengah hiruk-pikuk kota Los Santos, berdiri sebuah tempat yang jadi pusat perhatian malam hari — District10 Nightclub.
+      </p>
+
+      <!-- BUTTON GRID (SUDAH PAKAI LINK) -->
+      <div class="btn-grid">
+        <a href="https://forms.gle/9uA4NyKRooHTwoYm9" class="glass-btn">
+          <span class="icon">✦</span>
+          <span>Career</span>
+        </a>
+
+        <a href="https://pbs.twimg.com/media/Df5F0CzU8AAiEGb.jpg" class="glass-btn">
+          <span class="icon">◎</span>
+          <span>About District10</span>
+        </a>
+
+        <a href="https://i.ibb.co/6ctwrqWR/Screenshot-1.png" class="glass-btn">
+          <span class="icon">⚡</span>
+          <span>On Duty District10</span>
+        </a>
+
+        <a href="https://assets.telkomsel.com/public/2025-03/meme-kucing-minta-maaf.jpg?VersionId=cCftp2TNs9gHhvU4LLTg8tRiizAu4J8N" class="glass-btn">
+          <span class="icon">✉</span>
+          <span>Contact District10</span>
+        </a>
+      </div>
+
+      <p class="hint">Klik salah satu menu untuk melanjutkan</p>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <span>© <span id="year"></span> DISTRICT10. All rights reserved.</span>
+      <div class="socials">
+        <a href="#" class="pill-link">Instagram</a>
+        <a href="#" class="pill-link">TikTok</a>
+        <a href="#" class="pill-link">Spotify</a>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    // Tahun otomatis di footer
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Set label session berdasarkan jam (demo dinamis)
+    const hour = new Date().getHours();
+    const sessionLabel = document.getElementById("session-label");
+    if (hour >= 18 || hour < 3) {
+      sessionLabel.textContent = "Tonight's Session Live";
+    } else {
+      sessionLabel.textContent = "See You Tonight";
+    }
+
+    // Toast sederhana (kalau mau tetap dipakai)
+    const toast = document.getElementById("toast");
+    const toastText = document.getElementById("toast-text");
+    let toastTimeout = null;
+
+    function showToast(text) {
+      toastText.textContent = text;
+      toast.classList.add("visible");
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove("visible");
+      }, 2200);
+    }
+
+    // Kalau mau toast muncul saat hover tombol (bukan klik), bisa pakai ini:
+    document.querySelectorAll(".glass-btn").forEach((btn) => {
+      btn.addEventListener("mouseenter", () => {
+        const label = btn.textContent.trim();
+        showToast(label);
+      });
+    });
+  </script>
+</body>
+</html>
